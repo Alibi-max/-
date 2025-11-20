@@ -44,7 +44,7 @@ class Enemy(GameSprite):
             self.rect.y = -40
             self.rect.x = random.randint(0, 700)
 
-class Astreoid(GameSprite):
+class Asteroid(GameSprite):
     def update(self):
         self.rect.y +=self.speed_y
         self.rect.x +=self.speed_x
@@ -76,21 +76,21 @@ font_hp =pygame.font.SysFont('Arial', 32)
 font_enemy =pygame.font.SysFont('Arial', 32)
 
 
-player = Player('hero.png', 100, 100, 100, 500, 0, 0)
+player = Player('hero.png', 100, 100, 100, 500, 0, 0, 3)
 font_hp_ren = font_hp.render(f'Оставшиеся жизни: {player.hp}', True, WHITE)
 
 
 enemies = pygame.sprite.Group()
 for i in range(4):
-    enemy = Enemy('alien.png', 70, 70, random.randint(0,700), -40, 0, random.randint(2,4))
+    enemy = Enemy('alien.png', 35, 35, random.randint(0,700), -40, 0, random.randint(2,4))
     enemies.add(enemy)
 
 bullets = pygame.sprite.Group()
 asteroids =pygame.sprite.Group()
 for i in range(2):
-    asteroid = Astreoid('asteroid.png', 70, 70, random.randint(500,800), random.randint(-40,40), -5, 5)
+    asteroid = Asteroid('asteroid.png', 35, 35, random.randint(500,800), random.randint(-40,40), -5, 5)
     asteroids.add(asteroid)
-health_point = GameSprite('heart.png', 30, 30, random.randint(200, 600), random.randint(100, 400), 0, 0)
+health_point = GameSprite('heart.png', 15, 15, random.randint(200, 600), random.randint(100, 400), 0, 0)
 
 
 clock = pygame.time.Clock()
@@ -137,10 +137,10 @@ while game:
         bullets.draw(window)
         bullets.update()
         
-        if pygame.sprite.groupcollide(player, enemies, True):
+        if pygame.sprite.spritecollide(player, enemies, True):
             if player.hp < 1:
                 player.hp -= 1
-                enemy = Enemy('alien.png', 70, 70, random.randint(0,700), -40, 0, random.randint(2,4))
+                enemy = Enemy('alien.png', 35, 35, random.randint(0,700), -40, 0, random.randint(2,4))
                 enemies.add(enemy)
             else:
                 finish = True
@@ -148,7 +148,7 @@ while game:
                 pygame.mixer.music.stop()
 
         if pygame.sprite.groupcollide(enemies, bullets, True, True):
-            enemy = Enemy('alien.png', 70, 70, random.randint(0,700), -40, 0, random.randint(2,4))
+            enemy = Enemy('alien.png', 35, 35, random.randint(0,700), -40, 0, random.randint(2,4))
             enemies.add(enemy)
 
         if pygame.sprite.spritecollide(player, enemies, True):
@@ -156,13 +156,14 @@ while game:
                 player.hp += 1
             health_point.rect.x = random.randint(200,600)
             health_point.rect.y = random.randint(100,400)
-        if pygame.sprite.spritecollide(player, asteroid, True ):
+        if pygame.sprite.spritecollide(player, asteroids, True ):
             if player.hp >3:
                 player.hp -= 3
-                asteroid = Astreoid('asteroid.png', 70, 70, random.randint(500,800), random.randint(-40,40), -5, 5)
+                asteroid = Asteroid('asteroid.png', 35, 35, random.randint(500,800), random.randint(-40,40), -5, 5)
                 asteroids.add(asteroid)            
 
         
 
     pygame.display.update()
+
     clock.tick(60)
